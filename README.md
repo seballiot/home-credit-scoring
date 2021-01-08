@@ -5,12 +5,11 @@
 
 ### Run
 
-```
-cd home-credit-scoring
-```
+- Création d'un "virtual environment"
 ```
 python3 -m venv venv-banque
 ```
+- On rentre dans l'environnement virtuel
 ```
 #  Sur Unix et MacOS
 source venv-banque/bin/activate
