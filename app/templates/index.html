@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TP Home Credit Scoring</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-3">
+        <h3 class="text-center">Test table home_credit_columns_description</h3>
+
+        <table class="table table-bordered table-hover mt-4">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fichier</th>
+                <th>Variable</th>
+                <th>Description</th>
+                <th>Particularité</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for one_line in content.items %}
+            <tr>
+                <td>{{ one_line.field1 }}</td>
+                <td>{{ one_line.Table }}</td>
+                <td>{{ one_line.Row }}</td>
+                <td>{{ one_line.Description }}</td>
+                <td>{{ one_line.Special if one_line.Special is not none else '' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <ul class="pagination mt-4 justify-content-center">
+            {% if content.has_prev %}
+              <li class="page-item mr-1"> <a class="page-link btn btn-sm" href="{{ url_for('homepage', page=content.prev_num) }}"><<</a></li>
+            {% else %}
+              <li class="page-item mr-1"><a class="page-link btn btn-sm disabled" href="#"><<</a></li>
+            {% endif %}
+
+
+            {% if content.has_next %}
+              <li class="page-item ml-1"> <a class="page-link btn btn-sm" href="{{ url_for('homepage', page=content.next_num) }}">>></a></li>
+            {% else %}
+              <li class="page-item ml-1"><a class="page-link btn btn-sm disabled" href="#">>></a></li>
+            {% endif %}
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,4 +1,6 @@
 .idea
+.DS_STORE
+app/.DS_Store
 
 # Environments
 venv-banque
