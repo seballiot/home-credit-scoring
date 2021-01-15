@@ -33,7 +33,6 @@ export FLASK_APP=projectapp.py
 ```
 flask run
 ```
-
 NB : kill le serveur + sortir de l'environnement virtuel 
 ```
 CTRL C
