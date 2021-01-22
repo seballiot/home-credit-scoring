@@ -10,3 +10,8 @@ def homepage(page):
     per_page = 10
     content = HomeCreditColumnsDescription.query.paginate(page, per_page, error_out=False)
     return render_template('index.html', content=content)
+
+
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('test.html')

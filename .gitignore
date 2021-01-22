@@ -4,6 +4,3 @@ web_app_flask/app/.DS_Store
 
 # Environments
 web_app_flask/venv-banque
-
-# DB
-web_app_flask/app/Credit_database.db
