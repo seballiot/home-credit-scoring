@@ -1,6 +1,6 @@
 # Projet banque et modèle de Scoring
 
-L’intention de ce projet est de réaliser le modèle de machine learning de bout en bout jusqu’à sa mise en production.
+L'objectif de ce projet est de réaliser un modèle de machine learning sur des données bancaires de bout en bout, jusqu’à sa mise en production.
 
 ### Groupe 1
 
@@ -44,7 +44,11 @@ pip install -r requirements.txt
 ```
 - Variable global
 ```
+#  Sur Unix et MacOS
 export FLASK_APP=projectapp.py
+
+# Sur Windows
+set FLASK_APP=projectapp.py
 ```
 - Running du projet
 ```
