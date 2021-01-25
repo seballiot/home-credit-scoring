@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Client #{{ client.SK_ID_CURR }}</h1>
+</div>
+
+<div class="card shadow border-0">
+    <div class="card-body">
+        Affichage / graphiques à faire
+        <ul>
+            <li>Solde</li>
+            <li>Credits en cours / passés</li>
+            <li>Taux d’endettement (élevé, pas élevé)</li>
+            <li>Nb d’incident bancaire</li>
+            <li>Activité du client (casino, etc…), pas sur qu'on ait ça</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

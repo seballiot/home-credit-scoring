@@ -27,3 +27,10 @@ class Bureau(db.Model):
     CREDIT_TYPE = db.Column(db.String(120))
     DAYS_CREDIT_UPDATE = db.Column(db.Integer)
     AMT_ANNUITY = db.Column(db.String(120))
+
+
+class ApplicationTrain(db.Model):
+    SK_ID_CURR = db.Column(db.Integer, primary_key=True)
+    TARGET = db.Column(db.Integer)
+    NAME_CONTRACT_TYPE = db.Column(db.String(120))
+    CODE_GENDER = db.Column(db.String(120))

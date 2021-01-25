@@ -3,7 +3,30 @@
 {% block content %}
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Page test</h1>
+    <h1 class="h2">Dashboard</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card shadow border-0 mb-4">
+            <div class="card-body">
+                <h5>Les 10 clients qui comptabilisent le plus de crédits antérieurs</h5>
+                <div class="row">
+                    <canvas class="mt-3 w-100" id="chart_top_10_nb_credit"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card shadow border-0 mb-4">
+            <div class="card-body">
+                <h5 class="mb-0">Répartition du sexe des clients</h5>
+                <div class="row">
+                    <canvas class="my-4 w-100" id="chart_genders"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="card shadow border-0 mb-4">
@@ -14,63 +37,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-8">
-        <div class="card shadow border-0 mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <canvas class="my-4 w-100" id="chart1" width="100" height="50"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="card shadow border-0 mb-4">
-            <div class="card-body">
-                <h5 class="mb-0">Les 5 clients qui comptabilisent le plus de crédits antérieurs</h5>
-                <div class="row">
-                    <canvas class="my-4 w-100" id="chart2" width="100" height="50"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card shadow border-0">
-    <div class="card-body">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Colonne 1</th>
-                <th scope="col">Colonne 2</th>
-                <th scope="col">Colonne 3</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Valeur</td>
-                <td>Valeur</td>
-                <td>Valeur</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>NaN</td>
-                <td>Valeur</td>
-                <td>Valeur</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Valeur</td>
-                <td>NaN</td>
-                <td>Valeur</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
 {% endblock %}
 
 {% block graph %}
@@ -78,41 +44,20 @@
     (function () {
         'use strict'
 
-        feather.replace()
 
-        var randomScalingFactor = function() {
-            return Math.round(Math.random() * 100);
-        };
-        var color = Chart.helpers.color;
+        /*--- Graphique bar - Top 10 clients avec nombre de crédits ---*/
 
-        // Graphs
-        var ctx1 = document.getElementById('chart1')
+        var labels = "{{ labels }}".slice(0, -1).slice(1).split(',')
+        var data = {{ data }}
 
-        // eslint-disable-next-line no-unused-vars
-        var myChart = new Chart(ctx1, {
+        var myChart = new Chart(document.getElementById('chart_top_10_nb_credit'), {
             type: 'bar',
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: labels,
                 datasets: [{
-                    label: '# test',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)',
-                        'rgba(255, 159, 64, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
+                    label: ['Nombre de crédits '],
+                    data: data,
+                    backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#795548", "#ff9800","#607d8b","#009688","#3f51b5"]
                 }]
             },
             options: {
@@ -122,25 +67,30 @@
                             beginAtZero: true
                         }
                     }]
+                },
+                legend: { display: false },
+                title: {
+                    display: true,
+                    position: 'bottom',
+                    text: '(Affichage du champ SK_ID_CURR)'
                 }
             }
         });
 
-        /*--- Graphique doughnut - Top 5 clients avec nombre de crédits ---*/
+        /*--- Graphique pie - Répartition du nombre d'homme et de femme ---*/
 
-        var labels = "{{ labels }}".slice(0, -1).slice(1).split(',')
-        var data = {{ data }}
-
-        var ctx2 = document.getElementById('chart2')
-        var myChart = new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"]
-            }]
-        }
+        var myChart = new Chart(document.getElementById('chart_genders'), {
+            type: 'pie',
+            data: {
+                labels: ["Homme ", "Femme "],
+                datasets: [{
+                    data: [{{ nb_client_homme }}, {{ nb_client_femme }}],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 99, 132, 0.7)'
+                    ]
+                }]
+            }
         });
 
         var ctx3 = document.getElementById('chart3')
@@ -166,57 +116,6 @@
                 }]
             }
         });
-
-
-        /*var myRadarChart = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: [['Eating', 'Dinner'], ['Drinking', 'Water'], 'Sleeping', ['Designing', 'Graphics'], 'Coding', 'Cycling', 'Running'],
-            datasets: [{
-                label: 'My First dataset',
-                backgroundColor: 'rgb(244 67 54 / 0.2)',
-                borderColor: 'red',
-                pointBackgroundColor: 'red',
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ]
-            }, {
-                label: 'My Second dataset',
-                backgroundColor: 'rgb(13 110 252 / 0.2)',
-                borderColor: 'blue',
-                pointBackgroundColor: 'blue',
-                data: [
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor(),
-                    randomScalingFactor()
-                ]
-            }]
-        },
-        options: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: 'Chart.js Radar Chart'
-            },
-            scale: {
-                ticks: {
-                    beginAtZero: true
-                }
-            }
-        }
-        });*/
     })()
 
 {% endblock %}
