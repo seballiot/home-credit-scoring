@@ -3,20 +3,92 @@
 {% block content %}
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Client #{{ client.SK_ID_CURR }}</h1>
-</div>
-
-<div class="card shadow border-0">
-    <div class="card-body">
-        Affichage / graphiques à faire
-        <ul>
-            <li>Solde</li>
-            <li>Credits en cours / passés</li>
-            <li>Taux d’endettement (élevé, pas élevé)</li>
-            <li>Nb d’incident bancaire</li>
-            <li>Activité du client (casino, etc…), pas sur qu'on ait ça</li>
-        </ul>
+    <h2>Client #{{ client.SK_ID_CURR }}</h2>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" onclick="window.print();" class="btn btn-sm btn-primary not_impression">
+            Exporter les données <span style="padding-left:5px !important"><i class="fa fa-chart-line"></i></span>
+        </button>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <h5>Informations principales du client</h5>
+                <table class="table table-bordered table-hover mt-4">
+                    <thead>
+                    <tr>
+                        <th>Sexe</th>
+                        <th>Age</th>
+                        <th>Nombre d'enfant</th>
+                        <th>Logement</th>
+                        <th>Possède une voiture</th>
+                        <th>Revenu annuel</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ "Homme" if client.CODE_GENDER == "M" else "Femme" if client.CODE_GENDER == "F" else "Non renseigné" }}</td>
+                            <td>{{ (client.DAYS_BIRTH / -365)|int }} ans</td>
+                            <td>{{ client.CNT_CHILDREN }}</td>
+                            <td>{{ client.NAME_HOUSING_TYPE }}</td>
+                            <td>
+                                <span class="badge rounded-pill bg-{{ 'success' if client.FLAG_OWN_CAR == 'Y' else 'secondary' }}">
+                                    {{ 'Oui' if client.FLAG_OWN_CAR == 'Y' else 'Non' }}
+                                </span>
+                            </td>
+                            <td>${{ '{:,}'.format(client.AMT_INCOME_TOTAL) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <h5>Analyse du revenu par rapport aux autres clients</h5>
+                <canvas class=w-100" id="chart_revenu"></canvas>
+                <div class="mt-3">Le revenu du  client est environ <b>{{ perc_ecart|abs }}%</b> {{ 'au dessus' if perc_ecart >= 0 else 'en dessous' }} de la moyenne des revenus des autres clients.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block graph %}
+
+    (function () {
+        'use strict'
+
+
+        /*--- Graphique horizontalBar - Comparaison revenu ---*/
+
+        var myChart = new Chart(document.getElementById('chart_revenu'), {
+            type: 'horizontalBar',
+            data: {
+                labels: ['#{{ client.SK_ID_CURR }}', 'Moyenne '],
+                datasets: [{
+                    label: ['Revenu annuel '],
+                    data: [{{ client.AMT_INCOME_TOTAL }}, {{ moy_revenu }}],
+                    backgroundColor: ["#009688", "#e8c3b9"],
+                    barThickness: 40
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                legend: { display: false }
+            }
+        });
+
+    })()
 
 {% endblock %}

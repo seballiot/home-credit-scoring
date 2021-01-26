@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Liste des clients</h1>
+    <h2>Liste des clients</h2>
 </div>
 
 <div class="card shadow border-0">
@@ -12,8 +12,9 @@
             <thead>
             <tr>
                 <th>SK_ID_CURR</th>
-                <th>NAME_CONTRACT_TYPE</th>
-                <th>CODE_GENDER</th>
+                <th>Type de contrat</th>
+                <th>Sexe</th>
+                <th>Age</th>
                 <th></th>
             </tr>
             </thead>
@@ -22,7 +23,8 @@
             <tr>
                 <td>{{ client.SK_ID_CURR }}</td>
                 <td>{{ client.NAME_CONTRACT_TYPE }}</td>
-                <td>{{ client.CODE_GENDER }}</td>
+                <td>{{ "Homme" if client.CODE_GENDER == "M" else "Femme" if client.CODE_GENDER == "F" else "Non renseigné" }}</td>
+                <td>{{ (client.DAYS_BIRTH / -365)|int }} ans</td>
                 <td>
                     <a href="{{ url_for('get_client', id=client.SK_ID_CURR) }}" class="btn btn-primary btn-sm">
                         Voir plus <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
