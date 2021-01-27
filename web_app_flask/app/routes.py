@@ -35,3 +35,7 @@ def dashboard():
         labels=labels,
         data=data
     )
+
+@app.route('/accueil', methods=['GET'])
+def accueil():
+    return render_template('accueil.html')
