@@ -42,13 +42,15 @@ pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
-- Variable global
+- Variables globales
 ```
 #  Sur Unix et MacOS
 export FLASK_APP=projectapp.py
+export FLASK_ENV=development
 
 # Sur Windows
 set FLASK_APP=projectapp.py
+set FLASK_ENV=development
 ```
 - Running du projet
 ```
