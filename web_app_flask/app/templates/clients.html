@@ -5,7 +5,10 @@
 <div class="pt-4">
     <div class="card shadow border-0">
         <div class="card-body">
-            <div class="row justify-content-end mb-3">
+            <div class="row justify-content-between mb-3">
+                <div class="col-auto">
+                    <small class="text-muted">{{ '{:,}'.format(nb_clients).replace(',', ' ') }} clients found in database</small>
+                </div>
                 <div class="col-auto">
                     <small class="text-muted">{{ per_page }} clients per page</small>
                 </div>
@@ -14,9 +17,11 @@
                 <thead>
                 <tr>
                     <th class="bg-light">SK_ID_CURR</th>
-                    <th class="bg-light">Type de contrat</th>
-                    <th class="bg-light">Sexe</th>
+                    <th class="bg-light">Contract name</th>
+                    <th class="bg-light">Gender</th>
                     <th class="bg-light">Age</th>
+                    <th class="bg-light">Income type</th>
+                    <th class="bg-light">Annual income</th>
                     <th class="bg-light"></th>
                 </tr>
                 </thead>
@@ -25,12 +30,14 @@
                 <tr>
                     <td>N°{{ client.SK_ID_CURR }}</td>
                     <td>{{ client.NAME_CONTRACT_TYPE }}</td>
-                    <td>{{ "Homme" if client.CODE_GENDER == "M" else "Femme" if client.CODE_GENDER == "F" else "Non renseigné" }}</td>
-                    <td>{{ (client.DAYS_BIRTH / -365)|int }} ans</td>
+                    <td>{{ "Male" if client.CODE_GENDER == "M" else "Female" if client.CODE_GENDER == "F" else "Non renseigné" }}</td>
+                    <td>{{ (client.DAYS_BIRTH / -365)|int }} years old</td>
+                    <td>{{ client.NAME_INCOME_TYPE }}</td>
+                    <td>${{ '{:,}'.format(client.AMT_INCOME_TOTAL) }}</td>
                     <td>
-                        <a href="{{ url_for('get_client', id=client.SK_ID_CURR) }}" class="btn btn-outline-secondary btn-sm">
-                            More data <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
-                        </a>
+                    <a href="{{ url_for('get_client', id=client.SK_ID_CURR) }}" class="btn btn-outline-secondary btn-sm">
+                    More data <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
+                    </a>
                     </td>
                 </tr>
                 {% endfor %}

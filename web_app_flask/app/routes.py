@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, Markup
 from app import app, db
 from app.models import *
+import math
 
 
 @app.route('/test', methods=['GET'], defaults={"page": 1})
@@ -58,11 +59,15 @@ def clients(page):
     page = page
     per_page = 20
     liste_clients = ApplicationTrain.query.paginate(page, per_page, error_out=False)
+    nb_clients = ApplicationTrain.query.count()
+
+    print(nb_clients);
 
     return render_template(
         'clients.html',
         clients=liste_clients,
         per_page=20,
+        nb_clients=nb_clients,
         page='clients'
     )
 
@@ -80,14 +85,18 @@ def get_client(id):
     moy_revenu = round(moy_revenu.fetchone()['moy_revenu'], 2)
     perc_ecart = round((client.AMT_INCOME_TOTAL - moy_revenu) / moy_revenu * 100)
 
+    moy_enquiries = db.engine.execute('SELECT AVG(TOTAL_AMT_REQ_CREDIT_BUREAU) as moy_enquiries FROM application_train_enhanced;')
+    moy_enquiries = round(moy_enquiries.fetchone()['moy_enquiries'], 1)
+
     return render_template(
-        'client.html',
-        client=client,
-        client_data_enhanced=client_data_enhanced.fetchone(),
-        page='client',
-        moy_revenu=moy_revenu,
-        perc_ecart=perc_ecart
-    )
+            'client.html',
+            client=client,
+            client_data_enhanced=client_data_enhanced.fetchone(),
+            page='client',
+            moy_revenu=moy_revenu,
+            perc_ecart=perc_ecart,
+            moy_enquiries=moy_enquiries
+        )
 
 
 @app.route('/post_client/', methods=['POST'])

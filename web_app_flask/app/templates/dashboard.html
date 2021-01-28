@@ -10,7 +10,7 @@
     <div class="col-lg-7">
         <div class="card shadow border-0 mb-4">
             <div class="card-body">
-                <h5 class="mb-4">Les 10 clients qui comptabilisent le plus de crédits antérieurs</h5>
+                <h5 class="mb-4">The 10 customers with the most previous loans</h5>
                 <canvas class="w-100" id="chart_top_10_nb_credit"></canvas>
             </div>
         </div>
@@ -18,7 +18,7 @@
     <div class="col-lg-5">
         <div class="card shadow border-0 mb-4">
             <div class="card-body">
-                <h5 class="mb-4">Répartition du sexe des clients</h5>
+                <h5 class="mb-4">Gender distribution of clients</h5>
                 <canvas class=w-100" id="chart_genders"></canvas>
                 <div class="row text-muted mt-3">
                     <div class="col-6 px-1" style="text-align:right!important">
@@ -27,9 +27,9 @@
                         <div><b>{{ nb_client_na }}</b></div>
                     </div>
                     <div class="col-6 px-1">
-                        <div>hommes</div>
-                        <div>femmes</div>
-                        <div>non renseignés</div>
+                        <div>males</div>
+                        <div>females</div>
+                        <div>no data</div>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: ['Nombre de crédits '],
+                    label: ['Credits number '],
                     data: data,
                     backgroundColor: ["#003d2c","004d37", "#006649","00805b", "#00996e","00b380","#00cc92","#00e6a4", "#00ffb7","#33ffc5"]
                 }]
@@ -78,7 +78,7 @@
                 title: {
                     display: true,
                     position: 'bottom',
-                    text: '(Affichage du champ SK_ID_CURR)'
+                    text: '(Displaying SK_ID_CURR field)'
                 }
             }
         });
@@ -88,7 +88,7 @@
         var myChart = new Chart(document.getElementById('chart_genders'), {
             type: 'pie',
             data: {
-                labels: ["Homme ", "Femme ", "Non renseigné"],
+                labels: ["Male ", "Female ", "No data"],
                 datasets: [{
                     data: [{{ nb_client_homme }}, {{ nb_client_femme }}, {{ nb_client_na }}],
                     backgroundColor: [
