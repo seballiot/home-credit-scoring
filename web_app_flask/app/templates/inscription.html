@@ -1,0 +1,21 @@
+<DOCTYPE html
+	<html>
+		<head>
+			<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+			<meta charset="utf-8" />
+			<title>Créer un profil utilisateur</title>
+		</head>
+		<body>
+			<c><form action="create", method="post">
+			<h1> Créer un profil utilisateur </h1>
+				Identifiant:<br>
+				<input type="text" name="username" required pattern="{3-12}" autocomplete="on"/><br><br>
+				Mot de passe:<br>
+				<input type="password" name="mdp" /><br><br>
+				Adresse email:<br>
+				<input type="email" name="email" /><br><br>
+			<input type="submit" value="Confirmer"></c>
+			</form>
+			<a href="{{ url_for('inscription') }}"><c>Retour</c></a>
+	</body>
+	</html>
