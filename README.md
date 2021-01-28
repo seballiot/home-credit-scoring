@@ -15,7 +15,7 @@ L'objectif de ce projet est de réaliser un modèle de machine learning sur des 
 
 `web_app_flask/` : Application Web développée en Flask
 
-### Running de l'application Web
+### Running de l'application Web (en local)
 
 - Aller dans le dossier dédié
 ```

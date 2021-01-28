@@ -2,53 +2,70 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h2>Liste des clients</h2>
-</div>
+<div class="pt-4">
+    <div class="card shadow border-0">
+        <div class="card-body">
+            <div class="row justify-content-end mb-3">
+                <div class="col-auto">
+                    <small class="text-muted">{{ per_page }} clients per page</small>
+                </div>
+            </div>
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="bg-light">SK_ID_CURR</th>
+                    <th class="bg-light">Type de contrat</th>
+                    <th class="bg-light">Sexe</th>
+                    <th class="bg-light">Age</th>
+                    <th class="bg-light"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for client in clients.items %}
+                <tr>
+                    <td>N°{{ client.SK_ID_CURR }}</td>
+                    <td>{{ client.NAME_CONTRACT_TYPE }}</td>
+                    <td>{{ "Homme" if client.CODE_GENDER == "M" else "Femme" if client.CODE_GENDER == "F" else "Non renseigné" }}</td>
+                    <td>{{ (client.DAYS_BIRTH / -365)|int }} ans</td>
+                    <td>
+                        <a href="{{ url_for('get_client', id=client.SK_ID_CURR) }}" class="btn btn-outline-secondary btn-sm">
+                            More data <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-<div class="card shadow border-0">
-    <div class="card-body">
-        <table class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>SK_ID_CURR</th>
-                <th>Type de contrat</th>
-                <th>Sexe</th>
-                <th>Age</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for client in clients.items %}
-            <tr>
-                <td>{{ client.SK_ID_CURR }}</td>
-                <td>{{ client.NAME_CONTRACT_TYPE }}</td>
-                <td>{{ "Homme" if client.CODE_GENDER == "M" else "Femme" if client.CODE_GENDER == "F" else "Non renseigné" }}</td>
-                <td>{{ (client.DAYS_BIRTH / -365)|int }} ans</td>
-                <td>
-                    <a href="{{ url_for('get_client', id=client.SK_ID_CURR) }}" class="btn btn-primary btn-sm">
-                        Voir plus <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+            <ul class="pagination mt-4 justify-content-center">
+                {% if clients.has_prev %}
+                  <li class="page-item" style="margin-right:10px">
+                      <a class="page-link btn btn-sm" href="{{ url_for('clients', page=clients.prev_num) }}">
+                          <i class="fa fa-angle-double-left"></i>
+                      </a></li>
+                {% else %}
+                  <li class="page-item" style="margin-right:10px">
+                      <a class="page-link btn btn-sm disabled" href="#">
+                          <i class="fa fa-angle-double-left"></i>
+                      </a>
+                  </li>
+                {% endif %}
 
-        <ul class="pagination mt-4 justify-content-center">
-            {% if clients.has_prev %}
-              <li class="page-item mr-1"> <a class="page-link btn btn-sm" href="{{ url_for('clients', page=clients.prev_num) }}"><<</a></li>
-            {% else %}
-              <li class="page-item mr-1"><a class="page-link btn btn-sm disabled" href="#"><<</a></li>
-            {% endif %}
-
-
-            {% if clients.has_next %}
-              <li class="page-item ml-1"> <a class="page-link btn btn-sm" href="{{ url_for('clients', page=clients.next_num) }}">>></a></li>
-            {% else %}
-              <li class="page-item ml-1"><a class="page-link btn btn-sm disabled" href="#">>></a></li>
-            {% endif %}
-        </ul>
+                {% if clients.has_next %}
+                  <li class="page-item" style="margin-left:10px">
+                      <a class="page-link btn btn-sm" href="{{ url_for('clients', page=clients.next_num) }}">
+                          <i class="fa fa-angle-double-right"></i>
+                      </a>
+                  </li>
+                {% else %}
+                  <li class="page-item" style="margin-left:10px">
+                      <a class="page-link btn btn-sm disabled" href="#">
+                          <i class="fa fa-angle-double-right"></i>
+                      </a>
+                  </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </div>
 

@@ -62,6 +62,7 @@ def clients(page):
     return render_template(
         'clients.html',
         clients=liste_clients,
+        per_page=20,
         page='clients'
     )
 
@@ -70,7 +71,11 @@ def clients(page):
 def get_client(id):
     id = Markup.escape(id)
 
-    client = ApplicationTrain.query.get(id)
+    client = db.engine.execute('SELECT * FROM application_train WHERE SK_ID_CURR = '+id+';')
+    client = client.fetchone()
+
+    client_data_enhanced = db.engine.execute('SELECT * FROM application_train_enhanced WHERE SK_ID_CURR = ' + id + ';')
+
     moy_revenu = db.engine.execute('SELECT AVG(AMT_INCOME_TOTAL) as moy_revenu FROM application_train;')
     moy_revenu = round(moy_revenu.fetchone()['moy_revenu'], 2)
     perc_ecart = round((client.AMT_INCOME_TOTAL - moy_revenu) / moy_revenu * 100)
@@ -78,6 +83,7 @@ def get_client(id):
     return render_template(
         'client.html',
         client=client,
+        client_data_enhanced=client_data_enhanced.fetchone(),
         page='client',
         moy_revenu=moy_revenu,
         perc_ecart=perc_ecart
