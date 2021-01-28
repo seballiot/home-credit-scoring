@@ -11,15 +11,14 @@
 		<center>
 			<form action="{{ url_for('connexion') }}", method="post" >
 			<h1><ley>Y</ley><lbank>BANK</lbank> </h1>
-				<teet>Identifiant</teet>
-				<input type="text" name="username"  value="Identifiant" autocomplete="on"
+				<input type="text" name="username" placeholder="Username" autocomplete="on"
 				title="L'identifiant entre 3 et 8 caractères"><br><br>
-				<br><input type="password" name="mdp" value="Mot de passe"><br></lmdp>
+				<br><input type="password" name="mdp" placeholder="Password"><br>
 
-			<br><inscri> <a href="{{ url_for('inscription') }}">INSCRIPTION</inscri>       <input type="submit" value="Connexion">
+			<br> <input type="submit" value="Connexion">
 
 			</form>
-			<br><br><br><br><br><br><br><br><inscri> <a href="{{ url_for('super_admin') }}">ADMIN</inscri>
+			<br><br><br><inscri> <a href="{{ url_for('inscription') }}">INSCRIPTION</inscri> <br><br><br><br><br><inscri> <a href="{{ url_for('super_admin') }}">ADMIN</inscri>
 		</center>
 		</div>
 

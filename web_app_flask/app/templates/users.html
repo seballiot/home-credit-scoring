@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h2>Liste des users</h2> <h3> <a href = "{{ url_for('get_users_temp') }}">Liste des users temporaires </h3>
+    <h2>Users list</h2> <h3> <a href = "{{ url_for('get_users_temp') }}">Temporary users list</a></h3>
 </div>
 
 <div class="card shadow border-0">
@@ -12,10 +12,10 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Nom d'utilisateur</th>
-                <th>Mot de passe</th>
+                <th>Username</th>
+                <th>Password</th>
                 <th>Mail</th>
-                <th>Valider</th>
+                <th>Delete</th>
             </tr>
             </thead>
             <tbody>
@@ -27,7 +27,7 @@
                 <td>{{ user.mail }} </td>
                 <td>
                     <a href="{{ url_for('delete', id=user.ID) }}" class="btn btn-primary btn-sm">
-                        Supprimer utilisateur <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
+                        Delete user <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
                     </a>
                 </td>
             </tr>
