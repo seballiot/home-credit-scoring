@@ -13,6 +13,7 @@ L'objectif de ce projet est de réaliser un modèle de machine learning sur des 
 
 - Heroku : https://home-credit-scoring-grp1.herokuapp.com/
   - Compte démo : username = `demo`, mdp = `demo`
+  - Compte vision (pour voir en + la gestion des users) : username = `superadmin`, mdp = `superadmin`
 
 ### Composition du repository
 
