@@ -48,3 +48,23 @@ class ApplicationTrain(db.Model):
     NAME_HOUSING_TYPE = db.Column(db.String(120))
     REGION_POPULATION_RELATIVE = db.Column(db.String(120))
     DAYS_BIRTH = db.Column(db.Integer)
+
+
+class ApplicationTest(db.Model):
+    SK_ID_CURR = db.Column(db.Integer, primary_key=True)
+    NAME_CONTRACT_TYPE = db.Column(db.String(120))
+    CODE_GENDER = db.Column(db.String(120))
+    FLAG_OWN_CAR = db.Column(db.String(120))
+    FLAG_OWN_REALTY = db.Column(db.String(120))
+    CNT_CHILDREN = db.Column(db.Integer)
+    AMT_INCOME_TOTAL = db.Column(db.Float)
+    AMT_CREDIT = db.Column(db.Float)
+    AMT_ANNUITY = db.Column(db.Float)
+    AMT_GOODS_PRICE = db.Column(db.Float)
+    NAME_TYPE_SUITE = db.Column(db.String(120))
+    NAME_INCOME_TYPE = db.Column(db.String(120))
+    NAME_EDUCATION_TYPE = db.Column(db.String(120))
+    NAME_FAMILY_STATUS = db.Column(db.String(120))
+    NAME_HOUSING_TYPE = db.Column(db.String(120))
+    REGION_POPULATION_RELATIVE = db.Column(db.String(120))
+    DAYS_BIRTH = db.Column(db.Integer)
