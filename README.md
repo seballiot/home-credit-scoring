@@ -13,14 +13,14 @@ L'objectif de ce projet est de réaliser un modèle de machine learning sur des 
 
 `machine_learning_scripts/` : scripts de nettoyage, analyse et modélisation
 
-`web_app_flask/` : Application Web développée en Flask
+Les autres dossiers/fichiers composent l'application web python Flask
+
+### Accès à l'application déployée
+
+- Heroku : https://home-credit-scoring.herokuapp.com/
 
 ### Running de l'application Web (en local)
 
-- Aller dans le dossier dédié
-```
-cd web_app_flask/
-```
 - Création d'un "virtual environment"
 ```
 python3 -m venv venv-banque
