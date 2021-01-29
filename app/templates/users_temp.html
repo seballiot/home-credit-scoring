@@ -26,11 +26,11 @@
                 <td>**********</td>
                 <td>{{ user_temp.mail }} </td>
                 <td>
-                    <a href="{{ url_for('validate', id=user_temp.ID, username=user_temp.username, mdp=user_temp.mdp, mail=user_temp.mail) }}" class="btn btn-primary btn-sm">
-                        Validate <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
+                    <a href="{{ url_for('validate', id=user_temp.ID, username=user_temp.username, mdp=user_temp.mdp, mail=user_temp.mail) }}" class="btn btn-primary btn-sm mx-1">
+                        Validate <i class="fa fa-check-circle" style="margin-left:5px!important"></i>
                     </a>
-                    <a href="{{ url_for('refused', id=user_temp.ID) }}" class="btn btn-primary btn-sm">
-                        Refuse <i class="fa fa-chevron-right" style="margin-left:5px!important"></i>
+                    <a href="{{ url_for('refused', id=user_temp.ID) }}" class="btn btn-secondary btn-sm mx-1">
+                        Refuse <i class="fa fa-times-circle" style="margin-left:5px!important"></i>
                     </a>
                 </td>
             </tr>
@@ -41,5 +41,7 @@
 
     </div>
 </div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 {% endblock %}

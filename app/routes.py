@@ -1,19 +1,12 @@
-from flask import render_template, request, redirect, url_for, Markup
+from flask import render_template, request, redirect, url_for, Markup, session
 from app import app, db
 from app.models import *
 
 
-@app.route('/test', methods=['GET'], defaults={"page": 1})
-@app.route('/test<int:page>', methods=['GET'])
-def homepage(page):
-    page = page
-    per_page = 10
-    content = HomeCreditColumnsDescription.query.paginate(page, per_page, error_out=False)
-    return render_template('index.html', content=content)
-
-
-@app.route('/', methods=['GET'])
+@app.route('/dashboard', methods=['GET'])
 def dashboard():
+    if 'username' not in session:
+        return redirect(url_for('accueil'))
 
     top_client_nb_credit = db.engine.execute('SELECT SK_ID_CURR, count(*) AS nb_client '
                                              'FROM bureau '
@@ -74,6 +67,8 @@ def dashboard():
 @app.route('/clients/<int:page>', methods=['GET'], defaults={"error": None})
 @app.route('/clients/<int:error>', methods=['GET'], defaults={"page": 1})
 def clients(page, error):
+    if 'username' not in session:
+        return redirect(url_for('accueil'))
     page = page
     per_page = 20
     liste_clients = ApplicationTrain.query.paginate(page, per_page, error_out=False)
@@ -93,6 +88,8 @@ def clients(page, error):
 
 @app.route('/client/<int:id>', methods=['GET'])
 def get_client(id):
+    if 'username' not in session:
+        return redirect(url_for('accueil'))
     id = Markup.escape(id)
 
     client = db.engine.execute('SELECT * FROM application_train WHERE SK_ID_CURR = '+id+';')
@@ -123,10 +120,12 @@ def get_client(id):
 
 @app.route('/post_client/', methods=['POST'])
 def post_client():
+    if 'username' not in session:
+        return redirect(url_for('accueil'))
     return redirect(url_for('get_client', id=request.form['id']))
 
 
-@app.route('/accueil', methods=['GET'])
+@app.route('/', methods=['GET'])
 def accueil():
     return render_template('accueil.html')
 
@@ -143,35 +142,44 @@ def inscription():
 
 @app.route('/connexion', methods=['POST'])
 def connexion():
-    userpost = request.form ['username']
-    mdppost = request.form ['mdp']
+    userpost = Markup.escape(request.form ['username'])
+    mdppost = Markup.escape(request.form ['mdp'])
 
     utilisateur = db.engine.execute('SELECT username, mdp '
                                     'FROM users')
     user=utilisateur.fetchall()
     for x in user:
         if userpost == x[0] and mdppost == x[1]:
-                return redirect(url_for('dashboard'))
+            session['username'] = x[0]
+            return redirect(url_for('dashboard'))
 
     else:
         return redirect(url_for('accueil'))
 
 
+@app.route('/deconnexion', methods=['GET'])
+def deconnexion():
+    session.pop('username', None)
+    return redirect(url_for('accueil'))
+
+
 @app.route('/super_connex', methods=['POST'])
 def super_connex():
 
-    userpost = request.form ['username']
-    mdppost = request.form ['mdp']
+    userpost = Markup.escape(request.form ['username'])
+    mdppost = Markup.escape(request.form ['mdp'])
 
     utilisateur = db.engine.execute('SELECT username, mdp '
                                     'FROM super_admin')
     user=utilisateur.fetchall()
     for x in user:
         if userpost == x[0] and mdppost == x[1]:
-                return redirect(url_for('get_users_temp'))
+            session['username'] = "Admin"
+            return redirect(url_for('dashboard'))
 
     else:
         return redirect(url_for('super_admin'))
+
 
 @app.route('/create', methods=['POST'])
 def create():
@@ -186,6 +194,9 @@ def create():
 
 @app.route('/users_temp', methods=['GET'])
 def get_users_temp():
+    if 'username' not in session or session['username'] != "Admin":
+        return redirect(url_for('dashboard'))
+
     users_temp = db.engine.execute('SELECT * FROM users_temp')
 
     return render_template(
@@ -196,6 +207,9 @@ def get_users_temp():
 
 @app.route('/users', methods=['GET'])
 def users():
+    if 'username' not in session or session['username'] != "Admin":
+        return redirect(url_for('dashboard'))
+
     users = db.engine.execute('SELECT * FROM users')
 
     return render_template(
@@ -206,12 +220,18 @@ def users():
 
 @app.route('/delete/<int:id>/', methods=['GET'])
 def delete(id):
-    db.engine.execute('DELETE FROM users WHERE id = "'+str(id)+'";')
+    if 'username' not in session or session['username'] != "Admin":
+        return redirect(url_for('dashboard'))
+
+    db.engine.execute('DELETE FROM users WHERE id = "'+str(Markup.escape(id))+'";')
     return redirect(url_for('users'))
 
 
 @app.route('/validate/<int:id>/<string:username>/<string:mdp>/<string:mail>', methods=['GET'])
 def validate(id,username,mdp,mail):
+    if 'username' not in session or session['username'] != "Admin":
+        return redirect(url_for('dashboard'))
+
     db.engine.execute('INSERT INTO users (username, mdp, mail) VALUES ("'+username+'", "'+mdp+'", "'+mail+'")')
     db.engine.execute('DELETE FROM users_temp WHERE id = "'+str(id)+'";')
     return redirect(url_for('get_users_temp'))
@@ -219,5 +239,8 @@ def validate(id,username,mdp,mail):
 
 @app.route('/refused/<int:id>/', methods=['GET'])
 def refused(id):
-    db.engine.execute('DELETE FROM users_temp WHERE id = "'+str(id)+'";')
+    if 'username' not in session or session['username'] != "Admin":
+        return redirect(url_for('dashboard'))
+
+    db.engine.execute('DELETE FROM users_temp WHERE id = "'+str(Markup.escape(id))+'";')
     return redirect(url_for('get_users_temp'))

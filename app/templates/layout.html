@@ -28,7 +28,7 @@
                             <a class="nav-link text-white {{ 'border-bottom border-2 border-white pb-1 px-0 mx-2' if page == 'dashboard' else '' }}" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white {{ 'border-bottom border-2 border-white pb-1 px-0 mx-2' if page == 'clients' else '' }}" href="{{ url_for('clients') }}">Liste des clients</a>
+                            <a class="nav-link text-white {{ 'border-bottom border-2 border-white pb-1 px-0 mx-2' if page == 'clients' else '' }}" href="{{ url_for('clients') }}">Clients list</a>
                         </li>
                     </ul>
                     <form class="d-flex">
@@ -43,7 +43,17 @@
                                 placeholder="Search client..."
                             {% endif %}
                         >
-                        <a class="btn btn-light" href="">Déconnexion <i class="fa fa-power-off"></i></a>
+                        <div class="dropdown">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ session['username'][0].upper() + session['username'][1:] }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
+                                {% if session['username'] == "Admin" %}
+                                    <li><a class="dropdown-item" href="{{ url_for('get_users_temp') }}"><i class="fa fa-users"></i> <span style="padding-left:5px">Users request</span></a></li>
+                                {% endif %}
+                                <li><a class="dropdown-item" href="{{ url_for('deconnexion') }}"><i class="fa fa-power-off"></i> <span style="padding-left:5px">Log out</span></a></li>
+                            </ul>
+                        </div>
                     </form>
                 </div>
             </div>
