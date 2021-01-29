@@ -9,18 +9,26 @@ L'objectif de ce projet est de réaliser un modèle de machine learning sur des 
 - BENKANIA Mustapha
 - DANI Sofian
 
-### Composition du repository
-
-`machine_learning_scripts/` : scripts de nettoyage, analyse et modélisation
-
-Les autres dossiers/fichiers composent l'application web python Flask
-
 ### Accès à l'application déployée
 
-- Heroku : https://home-credit-scoring.herokuapp.com/
+- Heroku : https://home-credit-scoring-grp1.herokuapp.com/
+  - Compte démo : username = `demo`, mdp = `demo`
 
-### Running de l'application Web (en local)
+### Composition du repository
 
+- `machine_learning_scripts/` : Dossier contenant les scripts de nettoyage, analyse et modélisation
+- `model_donnees.pdf` : Modèle de données
+- Les autres dossiers/fichiers composent l'application web Flask
+
+### Technologies utilisées
+
+- Framework Python : **Flask**
+- Base de données : **SQLite**
+- Déploiement : **Heroku**
+
+### Running de l'application Web en local
+
+- Télécharger le projet en local, puis se placer à la racine du projet
 - Création d'un "virtual environment"
 ```
 python3 -m venv venv-banque
