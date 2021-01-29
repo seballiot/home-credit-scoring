@@ -1,7 +1,6 @@
 from flask import render_template, request, redirect, url_for, Markup
 from app import app, db
 from app.models import *
-import math
 
 
 @app.route('/test', methods=['GET'], defaults={"page": 1})
@@ -42,33 +41,53 @@ def dashboard():
         else:
             nb_client_na = gender['total']
 
+    age_range = db.engine.execute('SELECT AGE_IN_YEARS_RANGE, COUNT(SK_ID_CURR) as total '
+                                  'FROM application_train_enhanced '
+                                  'GROUP BY AGE_IN_YEARS_RANGE;')
+    for age in age_range:
+        if age['AGE_IN_YEARS_RANGE'] == 1:
+            nb_age_a = age['total']
+        elif age['AGE_IN_YEARS_RANGE'] == 2:
+            nb_age_b = age['total']
+        elif age['AGE_IN_YEARS_RANGE'] == 3:
+            nb_age_c = age['total']
+        elif age['AGE_IN_YEARS_RANGE'] == 4:
+            nb_age_d = age['total']
+
     return render_template(
         'dashboard.html',
         labels=labels,
+
         data=data,
         nb_client_homme=nb_client_homme,
         nb_client_femme=nb_client_femme,
         nb_client_na=nb_client_na,
+        nb_age_a=nb_age_a,
+        nb_age_b=nb_age_b,
+        nb_age_c=nb_age_c,
+        nb_age_d=nb_age_d,
         page='dashboard'
     )
 
 
-@app.route('/clients', methods=['GET'], defaults={"page": 1})
-@app.route('/clients/<int:page>', methods=['GET'])
-def clients(page):
+@app.route('/clients', methods=['GET'], defaults={"page": 1, "error": None})
+@app.route('/clients/<int:page>', methods=['GET'], defaults={"error": None})
+@app.route('/clients/<int:error>', methods=['GET'], defaults={"page": 1})
+def clients(page, error):
     page = page
     per_page = 20
     liste_clients = ApplicationTrain.query.paginate(page, per_page, error_out=False)
     nb_clients = ApplicationTrain.query.count()
 
-    print(nb_clients);
+    print(error)
 
     return render_template(
         'clients.html',
         clients=liste_clients,
         per_page=20,
         nb_clients=nb_clients,
-        page='clients'
+        page='clients',
+        id_error=error
     )
 
 
@@ -79,16 +98,19 @@ def get_client(id):
     client = db.engine.execute('SELECT * FROM application_train WHERE SK_ID_CURR = '+id+';')
     client = client.fetchone()
 
-    client_data_enhanced = db.engine.execute('SELECT * FROM application_train_enhanced WHERE SK_ID_CURR = ' + id + ';')
+    if client is None:
+        return redirect(url_for('clients', error=id))
+    else:
+        client_data_enhanced = db.engine.execute('SELECT * FROM application_train_enhanced WHERE SK_ID_CURR = ' + id + ';')
 
-    moy_revenu = db.engine.execute('SELECT AVG(AMT_INCOME_TOTAL) as moy_revenu FROM application_train;')
-    moy_revenu = round(moy_revenu.fetchone()['moy_revenu'], 2)
-    perc_ecart = round((client.AMT_INCOME_TOTAL - moy_revenu) / moy_revenu * 100)
+        moy_revenu = db.engine.execute('SELECT AVG(AMT_INCOME_TOTAL) as moy_revenu FROM application_train;')
+        moy_revenu = round(moy_revenu.fetchone()['moy_revenu'], 2)
+        perc_ecart = round((client.AMT_INCOME_TOTAL - moy_revenu) / moy_revenu * 100)
 
-    moy_enquiries = db.engine.execute('SELECT AVG(TOTAL_AMT_REQ_CREDIT_BUREAU) as moy_enquiries FROM application_train_enhanced;')
-    moy_enquiries = round(moy_enquiries.fetchone()['moy_enquiries'], 1)
+        moy_enquiries = db.engine.execute('SELECT AVG(TOTAL_AMT_REQ_CREDIT_BUREAU) as moy_enquiries FROM application_train_enhanced;')
+        moy_enquiries = round(moy_enquiries.fetchone()['moy_enquiries'], 1)
 
-    return render_template(
+        return render_template(
             'client.html',
             client=client,
             client_data_enhanced=client_data_enhanced.fetchone(),
@@ -103,3 +125,99 @@ def get_client(id):
 def post_client():
     return redirect(url_for('get_client', id=request.form['id']))
 
+
+@app.route('/accueil', methods=['GET'])
+def accueil():
+    return render_template('accueil.html')
+
+
+@app.route('/super_admin', methods=['GET'])
+def super_admin():
+    return render_template('super_admin.html')
+
+
+@app.route('/inscription', methods=['GET'])
+def inscription():
+    return render_template('inscription.html')
+
+
+@app.route('/connexion', methods=['POST'])
+def connexion():
+    userpost = request.form ['username']
+    mdppost = request.form ['mdp']
+
+    utilisateur = db.engine.execute('SELECT username, mdp '
+                                    'FROM users')
+    user=utilisateur.fetchall()
+    for x in user:
+        if userpost == x[0] and mdppost == x[1]:
+                return redirect(url_for('dashboard'))
+
+    else:
+        return redirect(url_for('accueil'))
+
+
+@app.route('/super_connex', methods=['POST'])
+def super_connex():
+
+    userpost = request.form ['username']
+    mdppost = request.form ['mdp']
+
+    utilisateur = db.engine.execute('SELECT username, mdp '
+                                    'FROM super_admin')
+    user=utilisateur.fetchall()
+    for x in user:
+        if userpost == x[0] and mdppost == x[1]:
+                return redirect(url_for('get_users_temp'))
+
+    else:
+        return redirect(url_for('super_admin'))
+
+@app.route('/create', methods=['POST'])
+def create():
+    userpost = request.form ['username']
+    mdppost = request.form ['mdp']
+    mailpost = request.form['email']
+
+    db.engine.execute('INSERT INTO users_temp (username, mdp, mail) VALUES ("'+userpost+'", "'+mdppost+'", "'+mailpost+'")')
+
+    return render_template('accueil.html')
+
+
+@app.route('/users_temp', methods=['GET'])
+def get_users_temp():
+    users_temp = db.engine.execute('SELECT * FROM users_temp')
+
+    return render_template(
+        'users_temp.html',
+        users_temp=users_temp
+    )
+
+
+@app.route('/users', methods=['GET'])
+def users():
+    users = db.engine.execute('SELECT * FROM users')
+
+    return render_template(
+        'users.html',
+        users=users
+    )
+
+
+@app.route('/delete/<int:id>/', methods=['GET'])
+def delete(id):
+    db.engine.execute('DELETE FROM users WHERE id = "'+str(id)+'";')
+    return redirect(url_for('users'))
+
+
+@app.route('/validate/<int:id>/<string:username>/<string:mdp>/<string:mail>', methods=['GET'])
+def validate(id,username,mdp,mail):
+    db.engine.execute('INSERT INTO users (username, mdp, mail) VALUES ("'+username+'", "'+mdp+'", "'+mail+'")')
+    db.engine.execute('DELETE FROM users_temp WHERE id = "'+str(id)+'";')
+    return redirect(url_for('get_users_temp'))
+
+
+@app.route('/refused/<int:id>/', methods=['GET'])
+def refused(id):
+    db.engine.execute('DELETE FROM users_temp WHERE id = "'+str(id)+'";')
+    return redirect(url_for('get_users_temp'))

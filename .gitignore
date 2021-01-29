@@ -4,3 +4,5 @@ web_app_flask/app/.DS_Store
 
 # Environments
 web_app_flask/venv-banque
+web_app_flask/app/__pycache__/*
+web_app_flask/__pycache__/*

@@ -18,7 +18,7 @@
     <div class="col-lg-5">
         <div class="card shadow border-0 mb-4">
             <div class="card-body">
-                <h5 class="mb-4">Gender distribution of clients</h5>
+                <h5 class="mb-4">Gender distribution</h5>
                 <canvas class=w-100" id="chart_genders"></canvas>
                 <div class="row text-muted mt-3">
                     <div class="col-6 px-1" style="text-align:right!important">
@@ -37,9 +37,14 @@
     </div>
 </div>
 
-<div class="card shadow border-0 mb-4">
-    <div class="card-body">
-        <canvas class="w-100" id="chart3" width="50" height="15"></canvas>
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow border-0 mb-4">
+            <div class="card-body">
+                <h5 class="mb-4">Age range</h5>
+                <canvas class=w-100" id="bar-chart-horizontal" width="800" height="450"></canvas>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -100,27 +105,21 @@
             }
         });
 
-        var ctx3 = document.getElementById('chart3')
-        var myChart = new Chart(ctx3, {
-            type: 'line',
+        /*--- Graphique pie - Tranches âge Clients ---*/
+
+        var myChart = new Chart(document.getElementById("bar-chart-horizontal"), {
+            type: 'horizontalBar',
             data: {
-                labels: [0,10,20,30],
+                labels: ["0-25", "25-45", "45-65", "65 and more"],
                 datasets: [{
-                    data: [60,85,106,4],
-                    label: "#1",
-                    borderColor: "#3e95cd",
-                    fill: false
-                }, {
-                    data: [411,282,350,502],
-                    label: "#2",
-                    borderColor: "#8e5ea2",
-                    fill: false
-                }, {
-                    data: [-4,78,302,24],
-                    label: "#3",
-                    borderColor: "#3cba9f",
-                    fill: false
+                    label: "Total ",
+                    backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                    data: [{{ nb_age_a }},{{ nb_age_b }},{{ nb_age_c }},{{ nb_age_d }}],
+                    barThickness: 40,
                 }]
+            },
+            options: {
+                legend: { display: false }
             }
         });
     })()
