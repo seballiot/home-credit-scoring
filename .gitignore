@@ -1,8 +1,8 @@
 .idea
 .DS_STORE
-web_app_flask/app/.DS_Store
+app/.DS_Store
 
 # Environments
-web_app_flask/venv-banque
-web_app_flask/app/__pycache__/*
-web_app_flask/__pycache__/*
+venv-banque
+app/__pycache__/*
+__pycache__/*
