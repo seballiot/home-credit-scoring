@@ -21,10 +21,14 @@
     <div class="card shadow border-0">
         <div class="card-body">
             <div class="row justify-content-between mb-3">
-                <div class="col-auto">
+                <div class="col-lg-3">
                     <small class="text-muted">{{ '{:,}'.format(nb_clients).replace(',', ' ') }} clients found in database</small>
                 </div>
                 <div class="col-auto">
+                    <a href="{{ url_for('clients', base = 'train') }}" style="margin-right:10px">Base train</a>
+                    <a href="{{ url_for('clients', base = 'test') }}" style="margin-left:10px">Base test</a>
+                </div>
+                <div class="col-lg-3" style="text-align:right">
                     <small class="text-muted">{{ per_page }} clients per page</small>
                 </div>
             </div>
@@ -62,7 +66,7 @@
             <ul class="pagination mt-4 justify-content-center">
                 {% if clients.has_prev %}
                   <li class="page-item" style="margin-right:10px">
-                      <a class="page-link btn btn-sm" href="{{ url_for('clients', page=clients.prev_num) }}">
+                      <a class="page-link btn btn-sm" href="{{ url_for('clients', base = base, page=clients.prev_num) }}">
                           <i class="fa fa-angle-double-left"></i>
                       </a></li>
                 {% else %}
@@ -75,7 +79,7 @@
 
                 {% if clients.has_next %}
                   <li class="page-item" style="margin-left:10px">
-                      <a class="page-link btn btn-sm" href="{{ url_for('clients', page=clients.next_num) }}">
+                      <a class="page-link btn btn-sm" href="{{ url_for('clients', base = base, page=clients.next_num) }}">
                           <i class="fa fa-angle-double-right"></i>
                       </a>
                   </li>

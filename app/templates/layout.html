@@ -9,15 +9,15 @@
         <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/impression.css') }}" media="print">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon.png') }}"/>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo-ico.jpg') }}"/>
     </head>
     <body>
 
         <!-- NAVBAR -->
         <form class="navbar navbar-expand-lg navbar-dark not_impression" action="{{ url_for('post_client') }}" method="POST" style="background-color:#00C8AD">
             <div class="container">
-                <a class="navbar-brand p-0" href="{{ url_for('dashboard') }}">
-                    <img src="{{ url_for('static', filename='img/home-credit-logo.png') }}" alt="" height="50" class="d-inline-block align-top">
+                <a class="navbar-brand p-0" style="margin-right:5px!important" href="{{ url_for('dashboard') }}">
+                    <img src="{{ url_for('static', filename='img/logo-blanc.png') }}" alt="" height="30" class="d-inline-block align-top">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -28,7 +28,7 @@
                             <a class="nav-link text-white {{ 'border-bottom border-2 border-white pb-1 px-0 mx-2' if page == 'dashboard' else '' }}" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white {{ 'border-bottom border-2 border-white pb-1 px-0 mx-2' if page == 'clients' else '' }}" href="{{ url_for('clients') }}">Clients list</a>
+                            <a class="nav-link text-white {{ 'border-bottom border-2 border-white pb-1 px-0 mx-2' if page == 'clients' else '' }}" href="{{ url_for('clients', base='train') }}">Clients list</a>
                         </li>
                     </ul>
                     <form class="d-flex">

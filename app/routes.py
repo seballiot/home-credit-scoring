@@ -50,7 +50,6 @@ def dashboard():
     return render_template(
         'dashboard.html',
         labels=labels,
-
         data=data,
         nb_client_homme=nb_client_homme,
         nb_client_femme=nb_client_femme,
@@ -63,18 +62,21 @@ def dashboard():
     )
 
 
-@app.route('/clients', methods=['GET'], defaults={"page": 1, "error": None})
-@app.route('/clients/<int:page>', methods=['GET'], defaults={"error": None})
-@app.route('/clients/<int:error>', methods=['GET'], defaults={"page": 1})
-def clients(page, error):
+@app.route('/clients/<string:base>', methods=['GET'], defaults={"page": 1, "error": None})
+@app.route('/clients/<string:base>/p/<int:page>', methods=['GET'], defaults={"error": None})
+@app.route('/clients/<string:base>/<int:error>', methods=['GET'], defaults={"page": 1})
+def clients(page, error, base):
     if 'username' not in session:
         return redirect(url_for('accueil'))
     page = page
     per_page = 20
-    liste_clients = ApplicationTrain.query.paginate(page, per_page, error_out=False)
-    nb_clients = ApplicationTrain.query.count()
 
-    print(error)
+    if base == "train":
+        liste_clients = ApplicationTrain.query.paginate(page, per_page, error_out=False)
+        nb_clients = ApplicationTrain.query.count()
+    elif base == "test":
+        liste_clients = ApplicationTest.query.paginate(page, per_page, error_out=False)
+        nb_clients = ApplicationTest.query.count()
 
     return render_template(
         'clients.html',
@@ -82,6 +84,7 @@ def clients(page, error):
         per_page=20,
         nb_clients=nb_clients,
         page='clients',
+        base=base,
         id_error=error
     )
 
@@ -92,20 +95,41 @@ def get_client(id):
         return redirect(url_for('accueil'))
     id = Markup.escape(id)
 
-    client = db.engine.execute('SELECT * FROM application_train WHERE SK_ID_CURR = '+id+';')
-    client = client.fetchone()
+    client_train = db.engine.execute('SELECT * FROM application_train WHERE SK_ID_CURR = '+id+';')
+    client_train = client_train.fetchone()
 
-    if client is None:
-        return redirect(url_for('clients', error=id))
+    client_test = db.engine.execute('SELECT * FROM application_test WHERE SK_ID_CURR = ' + id + ';')
+    client_test = client_test.fetchone()
+
+    if client_train is None and client_test is None:
+        return redirect(url_for('clients', base = "train", error=id))
     else:
-        client_data_enhanced = db.engine.execute('SELECT * FROM application_train_enhanced WHERE SK_ID_CURR = ' + id + ';')
 
-        moy_revenu = db.engine.execute('SELECT AVG(AMT_INCOME_TOTAL) as moy_revenu FROM application_train;')
-        moy_revenu = round(moy_revenu.fetchone()['moy_revenu'], 2)
-        perc_ecart = round((client.AMT_INCOME_TOTAL - moy_revenu) / moy_revenu * 100)
+        client_type = "train" if client_test is None else "test";
 
-        moy_enquiries = db.engine.execute('SELECT AVG(TOTAL_AMT_REQ_CREDIT_BUREAU) as moy_enquiries FROM application_train_enhanced;')
-        moy_enquiries = round(moy_enquiries.fetchone()['moy_enquiries'], 1)
+        if client_test is None:
+            client = client_train
+            client_data_enhanced = db.engine.execute('SELECT * FROM application_train_enhanced WHERE SK_ID_CURR = ' + id + ';')
+
+            moy_revenu = db.engine.execute('SELECT AVG(AMT_INCOME_TOTAL) as moy_revenu FROM application_train;')
+            moy_revenu = round(moy_revenu.fetchone()['moy_revenu'], 2)
+            perc_ecart = round((client.AMT_INCOME_TOTAL - moy_revenu) / moy_revenu * 100)
+
+            moy_enquiries = db.engine.execute('SELECT AVG(TOTAL_AMT_REQ_CREDIT_BUREAU) AS moy_enquiries '
+                                              'FROM application_train_enhanced;')
+            moy_enquiries = round(moy_enquiries.fetchone()['moy_enquiries'], 1)
+
+        else:
+            client = client_test
+            client_data_enhanced = db.engine.execute('SELECT * FROM predictions WHERE SK_ID_CURR = ' + id + ';')
+
+            moy_revenu = db.engine.execute('SELECT AVG(AMT_INCOME_TOTAL) as moy_revenu FROM application_test;')
+            moy_revenu = round(moy_revenu.fetchone()['moy_revenu'], 2)
+            perc_ecart = round((client.AMT_INCOME_TOTAL - moy_revenu) / moy_revenu * 100)
+
+            moy_enquiries = db.engine.execute('SELECT AVG(TOTAL_AMT_REQ_CREDIT_BUREAU) AS moy_enquiries '
+                                              'FROM predictions;')
+            moy_enquiries = round(moy_enquiries.fetchone()['moy_enquiries'], 1)
 
         return render_template(
             'client.html',
@@ -114,7 +138,8 @@ def get_client(id):
             page='client',
             moy_revenu=moy_revenu,
             perc_ecart=perc_ecart,
-            moy_enquiries=moy_enquiries
+            moy_enquiries=moy_enquiries,
+            client_type=client_type
         )
 
 
