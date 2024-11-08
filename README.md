@@ -9,11 +9,6 @@ L'objectif de ce projet est de réaliser un modèle de machine learning sur des 
 - BENKANIA Mustapha
 - DANI Sofian
 
-### Accès à l'application déployée
-
-- Heroku : https://home-credit-scoring-grp1.herokuapp.com/
-  - Compte admin : username = `superadmin`, mdp = `superadmin`
-
 ### Composition du repository
 
 - `machine_learning_scripts/` : Dossier contenant les scripts de nettoyage, analyse et modélisation
@@ -64,7 +59,8 @@ set FLASK_ENV=development
 ```
 flask run
 ```
-NB : kill le serveur + sortir de l'environnement virtuel 
+- Utiliser le compte admin : username = `superadmin`, mdp = `superadmin`
+- Clean env
 ```
 CTRL C
 
